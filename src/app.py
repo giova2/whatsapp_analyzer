@@ -5,11 +5,16 @@ import sys
 from datetime import datetime
 import re
 
+ALLOWED_EXTENSIONS = {'txt'}
+
 app = Flask(__name__)
 
 ChatFileFirstPart = "Chat de WhatsApp con "
 ExportExtension = "txt"
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=['GET'])
 def get_input_chats():
@@ -18,16 +23,18 @@ def get_input_chats():
 @app.route('/chats', methods=['POST'])
 def chats():
     FileChat = request.files['file']
-    dir_chats = 'chats/'
-    chatFileName = dir_chats + secure_filename(FileChat.filename) 
-    FileChat.save(chatFileName)
-    dir_path_chats = Path(dir_chats)
-    # for FChat in dir_chats.glob('*.'+ExportExtension):
-    users_conversacion = parse_user_from_file(str(chatFileName))
-    # users_conversacion = parse_user_from_file(str(chatFileName))
-    resultados = estadisticas(chatFileName, users_conversacion)
-    # resultados['contador_mensajes'] -= 1
-    return render_template('show_info.html', title="Analizador Whatsapp chats", chat=FileChat, resultados=resultados, usuarios=users_conversacion)
+    if FileChat and allowed_file(FileChat.filename):
+        dir_chats = 'chats/'
+        chatFileName = dir_chats + secure_filename(FileChat.filename) 
+        FileChat.save(chatFileName)
+        dir_path_chats = Path(dir_chats)
+        # for FChat in dir_chats.glob('*.'+ExportExtension):
+        users_conversacion = parse_user_from_file(str(chatFileName))
+        # users_conversacion = parse_user_from_file(str(chatFileName))
+        resultados = estadisticas(chatFileName, users_conversacion)
+        # resultados['contador_mensajes'] -= 1
+        return render_template('show_info.html', title="Analizador Whatsapp chats", chat=FileChat, resultados=resultados, usuarios=users_conversacion)
+    return '<div style="display: flex;justify-content: center;align-items: center;height: 100%;"><h2>El archivo debe ser .txt</h2></div>'
 
 @app.route('/chats_consola', methods=['GET'])
 def chats_consola():

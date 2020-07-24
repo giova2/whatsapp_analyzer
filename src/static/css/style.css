@@ -52,7 +52,7 @@ label {
   height: 10vmin;
   top: 3vmin;
   right: 3vmin;
-  font-size: 5vmin;
+  font-size: 1rem;
   z-index: 3;
   border-radius: 50%;
   background: darkblue;
@@ -67,8 +67,13 @@ label {
 
 .help.open {
   border-radius: 0;
-  width: 50vw;
+  width: 80vw;
   height: auto;
+}
+@media (min-width: 500px) {
+  .help.open {
+    width: 50vw;
+  }
 }
 
 .help span:nth-child(2) {
