@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, request
-from estadisticas import *
-from constants import *
-from users import users
+import estadisticas
+import constants
+import users
 from pathlib import Path
 from werkzeug.utils import secure_filename
 import sys

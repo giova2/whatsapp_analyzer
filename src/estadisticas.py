@@ -1,6 +1,6 @@
 from datetime import datetime
-from constants import *
-from utils import *
+import constants
+import utils
 import re
 
 
