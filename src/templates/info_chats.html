@@ -1,0 +1,70 @@
+{% extends "index.html" %} {% block body %}
+<body>
+  <!-- title="Cómo exportar mi chat de Whatsapp?"
+    target="_blank"
+    href="https://www.google.com/search?q=como+exportar+mis+chats+en+whatsapp&oq=como+exportar+mis+chats+en+whatsapp&aqs=chrome..69i57.10989j0j4&sourceid=chrome&ie=UTF-8" -->
+  <div
+    class="help"
+    onclick="this.classList.toggle('open');document.querySelector('.info-help').classList.toggle('show')"
+  >
+    <div class="info-help">
+      <ul>
+        <li>Dirígete al chat que quieras analizar en Whatsapp</li>
+        <li>
+          Presiona o haz click en los 3 puntitos en forma vertical que están en
+          la parte superior derecha del chat.
+        </li>
+        <li>
+          Allí verás la opción exportar, exporta el archivo y cargalo aquí
+        </li>
+        <li>
+          (aún no estamos preparados para analizar todo el multimedia del chat,
+          así que carga sólo la conversación que a día de hoy es un archivo txt
+        </li>
+      </ul>
+    </div>
+    <span>?</span>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6 offset-md-3 mt-5">
+        <div
+          class="d-flex flex-column justify-content-center"
+          style="height: 100vh;"
+        >
+          <div class="p-2 align-self-center">
+            <h2>
+              Analizador de Chats Whatsapp
+            </h2>
+          </div>
+          <form action="/chats" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for=""></label>
+              <input
+                type="file"
+                class="form-control-file"
+                name="file"
+                id=""
+                placeholder=""
+                aria-describedby="fileHelpId"
+              />
+              <small id="fileHelpId" class="form-text text-muted"
+                >Cargue el archivo exportado desde whatsapp</small
+              >
+            </div>
+
+            <div class="form-group">
+              <input
+                type="submit"
+                value="Consultar"
+                class="btn btn-primary form-control"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}
