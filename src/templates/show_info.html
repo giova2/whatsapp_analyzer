@@ -7,42 +7,42 @@
       </div>
     </div> -->
     <div class="row">
-      <div class="col-12 lead text-center">
-        <label class="titulo">Número de mensajes intercambiados:</label>
+      <div class="col-12 lead text-center mt-3 mb-3">
+        <label class="titulo">Número de mensajes intercambiados</label>
         <strong>{{ resultados.contador_mensajes }} </strong>
       </div>
       {% for usuario in usuarios %}
       <div class="col-12 col-md-6">
         <div class="row">
           <div class="col-12 lead text-center">
-            <h3 class="titulo">Datos {{ usuario|title|replace("_"," ")|truncate(9,true,'..') }}:</h3>
+            <h3 class="titulo">Datos {{ usuario|title|replace("_"," ")|truncate(9,true,'..') }}</h3>
           </div>
           <div class="col-12 bg-light m-1 pt-1 pb-1">
             <div class="row">
-              <div class="col-10 col-md-6 lead titulo">
-                <label> Mensajes enviados:</label>
+              <div class="col-8 col-md-6 lead titulo">
+                <label> Mensajes enviados</label>
               </div>
-              <div class="col-2 col-md-6 lead text-left">
+              <div class="col-4 col-md-6 lead text-right">
                 <strong>{{ resultados[usuario].contador_mensajes }} </strong>
               </div>
             </div>
           </div>
           <div class="col-12 bg-light m-1 pt-1 pb-1">
             <div class="row">
-              <div class="col-10 col-md-6 lead titulo">
-                <label> Palabras:</label>
+              <div class="col-8 col-md-6 lead titulo">
+                <label> Palabras</label>
               </div>
-              <div class="col-2 col-md-6 lead text-left">
+              <div class="col-4 col-md-6 lead text-right">
                 <strong>{{ resultados[usuario].contador_palabras }} </strong>
               </div>
             </div>
           </div>
           <div class="col-12 bg-light m-1 pt-1 pb-1">
             <div class="row">
-              <div class="col-10 col-md-6 lead titulo">
-                <label> Largo promedio de mensajes (en caracteres):</label>
+              <div class="col-8 col-md-6 lead titulo">
+                <label> Largo promedio de mensajes (en caracteres)</label>
               </div>
-              <div class="col-2 col-md-6 lead text-left">
+              <div class="col-4 col-md-6 lead text-right">
                 <strong
                   >{{ resultados[usuario].promedio_largo_mensajes }}
                 </strong>
@@ -124,15 +124,17 @@
       </div>
       {% endfor %} {% set dias_semana = ['Lunes', 'Martes', 'Miércoles',
       'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
-      <div class="col-12 bg-light m-1 pt-1 pb-1">
-        <h3 class="titulo">Datos de ambos:</h3>
+      {% set dias_semana_cortos = ['Lu', 'Ma', 'Mi',
+      'Ju', 'Vi', 'Sá', 'Do'] %}
+      <div class="col-12 bg-light m-1 pt-1 pb-1 text-center">
+        <h3 class="titulo">Datos de ambos</h3>
       </div>
       <div class="col-12 bg-light m-1 pt-1 pb-1">
         <div class="row">
           <div class="col-6 lead titulo">
-            <label> Día de la semana en la que más chatearon:</label>
+            <label> Día de la semana en la que más chatearon</label>
           </div>
-          <div class="col-6 lead text-left">
+          <div class="col-6 lead text-right">
             <strong>{{ dias_semana[resultados.maximo_dia_mensajes] }} </strong>
           </div>
         </div>
@@ -140,9 +142,9 @@
       <div class="col-12 bg-light m-1 pt-1 pb-1">
         <div class="row">
           <div class="col-6 lead titulo">
-            <label> Hora del día en la que más hablaron:</label>
+            <label> Hora del día en la que más hablaron</label>
           </div>
-          <div class="col-6 lead text-left">
+          <div class="col-6 lead text-right">
             <strong>{{ resultados.maximo_hora_mensajes }} hs</strong>
           </div>
         </div>
@@ -220,10 +222,16 @@
               {{ cant_mensajes_dia_tal }}
             </span>
             <span
-              class="text-secondary"
+              class="text-secondary d-none d-md-inline"
               style="position: absolute; bottom: -23px;"
             >
               {{ dias_semana[loop.index0] }}
+            </span>
+            <span
+              class="text-secondary d-md-none"
+              style="position: absolute; bottom: -23px;"
+            >
+              {{ dias_semana_cortos[loop.index0] }}
             </span>
           </div>
 

@@ -23,6 +23,7 @@ def get_input_chats():
 @app.route('/chats', methods=['POST'])
 def chats():
     FileChat = request.files['file']
+    
     if FileChat and allowed_file(FileChat.filename):
         dir_chats = 'chats/'
         chatFileName = dir_chats + secure_filename(FileChat.filename) 
@@ -60,6 +61,8 @@ def parse_user_from_file(url_archivo):
                 data = datos_relevantes(line)
                 if data['usuario'] not in usuarios:
                     usuarios.append(data['usuario'])
+            if len(usuarios) == 2:
+                return usuarios
     return usuarios
 
 def estadisticas(url, arr_usuarios):

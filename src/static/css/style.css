@@ -1,6 +1,9 @@
 body {
   background: aliceblue;
   font-family: "Montserrat", sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+  padding: 0;
 }
 
 label {
@@ -21,6 +24,9 @@ label {
   bottom: 0;
   transition: transform 250ms linear;
   transform: rotate(90deg);
+}
+.card-header[data-toggle="collapse"]:hover {
+  filter: opacity(0.5);
 }
 
 .close {
