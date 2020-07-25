@@ -90,3 +90,9 @@ label {
   text-align: center;
   display: block;
 }
+
+@media (max-height: 500px) {
+  li.item {
+    font-size: 1rem;
+  }
+}
