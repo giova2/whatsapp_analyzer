@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 import sys
 from datetime import datetime
 
-from functions import *
+from .functions import *
 
 ALLOWED_EXTENSIONS = {'txt'}
 
