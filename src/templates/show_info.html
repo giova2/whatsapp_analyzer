@@ -1,6 +1,10 @@
 {% extends "index.html" %} {% block body %}
 <body>
   <div class="container mb-4">
+    {% set dias_semana = ['Lunes', 'Martes', 'Miércoles',
+      'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
+      {% set dias_semana_cortos = ['Lu', 'Ma', 'Mi',
+      'Ju', 'Vi', 'Sá', 'Do'] %}
     <!-- <div class="row">
       <div class="col-12 mb-4 text-center">
         <h3>{{ chat }}</h3>
@@ -11,7 +15,7 @@
         <label class="titulo">Número de mensajes intercambiados</label>
         <strong>{{ resultados.contador_mensajes }} </strong>
       </div>
-      {% for usuario in usuarios %}
+      {% for usuario in resultados.usuarios %}
       <div class="col-12 col-md-6">
         <div class="row">
           <div class="col-12 lead text-center">
@@ -29,6 +33,18 @@
           </div>
           <div class="col-12 bg-light m-1 pt-1 pb-1">
             <div class="row">
+              <div class="col-9 col-md-8 lead titulo">
+                <label> Largo promedio de mensajes (en caracteres)</label>
+              </div>
+              <div class="col-3 col-md-4 lead text-right">
+                <strong
+                  >{{ resultados[usuario].promedio_largo_mensajes }}
+                </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 bg-light m-1 pt-1 pb-1">
+            <div class="row">
               <div class="col-8 col-md-6 lead titulo">
                 <label> Palabras</label>
               </div>
@@ -40,12 +56,10 @@
           <div class="col-12 bg-light m-1 pt-1 pb-1">
             <div class="row">
               <div class="col-8 col-md-6 lead titulo">
-                <label> Largo promedio de mensajes (en caracteres)</label>
+                <label> Archivos Multimedia </label>
               </div>
               <div class="col-4 col-md-6 lead text-right">
-                <strong
-                  >{{ resultados[usuario].promedio_largo_mensajes }}
-                </strong>
+                <strong>{{ resultados[usuario].contador_mensajes_multimedia }} </strong>
               </div>
             </div>
           </div>
@@ -105,27 +119,148 @@
                 data-parent="#accordionMostUsedWords{{ usuario }}"
             >
                 <ul class="list-group">
-                    {% for palabra in resultados[usuario].palabras_mas_usadas
-                    %} {% if resultados[usuario].palabras_mas_usadas[palabra]
-                    >= resultados.minimo_considerable_palabra_usada %}
-                    <li
-                    class="list-group-item text-secondary pt-1 pb-1 item"
-                    title="{{palabra}}"
-                    ><p>
-                    {{ palabra }} : {{
-                    resultados[usuario].palabras_mas_usadas[palabra] }}
-                    </p>  
-                    </li>
-                    {% endif %} {% endfor %}
+                    {% for palabra in resultados[usuario].palabras_mas_usadas %} 
+                      {% if resultados[usuario].palabras_mas_usadas[palabra] >= resultados.minimo_considerable_palabra_usada %}
+                        <li
+                        class="list-group-item text-secondary pt-1 pb-1 item"
+                        title="{{palabra}}"
+                        ><p>
+                        {{ palabra }} : {{ resultados[usuario].palabras_mas_usadas[palabra] }}
+                        </p>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
                 </ul>
                 <div class="close bg-light" onclick="$('#collapseMostUsedWords{{usuario}}').collapse('hide')"></div>
             </div>
         </div>
+        <div class="row">
+          <div class="col-12 bg-light m-1 pt-1 pb-1 lead" id="accordionMostUsedEmojis{{ usuario }}">
+              <div
+                  class="card-header"
+                  id="headingMostUsedEmojis{{usuario}}"
+                  data-toggle="collapse"
+                  data-target="#collapseMostUsedEmojis{{usuario}}"
+                  aria-expanded="false"
+                  aria-controls="collapseMostUsedEmojis{{usuario}}"
+              >
+                  <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
+                  Emojis más usados:
+                  </h5>
+              </div>
+          </div>
+            <div
+                    id="collapseMostUsedEmojis{{usuario}}"
+                    class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
+                    aria-labelledby="headingMostUsedEmojis{{usuario}}"
+                    data-parent="#accordionMostUsedEmojis{{ usuario }}"
+                >
+              <ul class="list-group">
+                  {% for emoji, number in resultados[usuario].contador_emojis.items() %} 
+                      <li
+                      class="list-group-item text-secondary pt-1 pb-1 item"
+                      title="{{emoji}}"
+                      ><p>
+                      {{ emoji }} : {{ number}}
+                      </p>
+                      </li>
+                  {% endfor %}
+              </ul>
+              <div class="close bg-light" onclick="$('#collapseMostUsedEmojis{{usuario}}').collapse('hide')"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 bg-light mt-1 ml-1 mr-1 pt-1 text-center lead titulo">
+              Cantidad de mensajes enviados por hora:
+            </div>
+            <div class="col-12 bg-light mb-1 ml-1 mr-1 pt-1 pb-1">
+              {% set altura_grafico = 300 %}
+              <div
+                class="d-flex flex-row align-items-end mt-3"
+                style="height:{{ altura_grafico }}px;"
+              >
+                <div
+                  class="d-flex flex-column align-items-center ml-1 lead titulo"
+                  style="
+                    height: 100%;
+                    writing-mode: vertical-lr;
+                    transform: rotate(180deg);
+                  "
+                >
+                  Cantidad mensajes
+                </div>
+                {% for cant_mensajes_hora_tal in resultados[usuario].hora_mensajes %}
+      
+                <div
+                  class="d-flex flex-column align-items-center bg-dark ml-1 barra"
+                  style="position:relative; width:{{ 100/25 }}%; height:{{ cant_mensajes_hora_tal/(resultados.hora_mensajes[resultados.maximo_hora_mensajes] +1 )*100 }}%"
+                >
+                  <span class="text-primary" style="position: absolute; top: -20px;">
+                    {{ cant_mensajes_hora_tal }}
+                  </span>
+                  <span
+                    class="text-secondary"
+                    style="position: absolute; bottom: -23px;"
+                  >
+                    {{ loop.index0 }}
+                  </span>
+                </div>
+      
+                {% endfor %}
+              </div>
+              <div class="text-center mt-4 lead titulo">Horas del día</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 bg-light ml-1 mr-1 mt-4 pt-1 pb-1 text-center lead titulo">
+              Cantidad de mensajes enviados en los días de la semana:
+            </div>
+            <div class="col-12 bg-light mb-1 ml-1 mr-1 pt-1 pb-1">
+              {% set altura_grafico = 300 %}
+              <div
+                class="d-flex flex-row align-items-end mt-3"
+                style="height:{{ altura_grafico }}px;"
+              >
+                <div
+                  class="d-flex flex-column align-items-center ml-1 lead titulo"
+                  style="
+                    height: 100%;
+                    writing-mode: vertical-lr;
+                    transform: rotate(180deg);
+                  "
+                >
+                  Cantidad mensajes
+                </div>
+                {% for cant_mensajes_dia_tal in resultados[usuario].dia_mensajes %}
+      
+                <div
+                  class="d-flex flex-column align-items-center bg-dark ml-1 barra"
+                  style="position:relative; width:{{ 100/8 }}%; height: {{ cant_mensajes_dia_tal/(resultados.dia_mensajes[resultados.maximo_dia_mensajes] +1 )*100 }}%"
+                >
+                  <span class="text-primary" style="position: absolute; top: -20px;">
+                    {{ cant_mensajes_dia_tal }}
+                  </span>
+                  <span
+                    class="text-secondary d-none d-md-inline"
+                    style="position: absolute; bottom: -23px;"
+                  >
+                    {{ dias_semana[loop.index0] }}
+                  </span>
+                  <span
+                    class="text-secondary d-md-none"
+                    style="position: absolute; bottom: -23px;"
+                  >
+                    {{ dias_semana_cortos[loop.index0] }}
+                  </span>
+                </div>
+      
+                {% endfor %}
+              </div>
+              <div class="text-center mt-4 lead titulo">Días de la semana</div>
+            </div>
+          </div>
       </div>
-      {% endfor %} {% set dias_semana = ['Lunes', 'Martes', 'Miércoles',
-      'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
-      {% set dias_semana_cortos = ['Lu', 'Ma', 'Mi',
-      'Ju', 'Vi', 'Sá', 'Do'] %}
+      {% endfor %}
       <div class="col-12 bg-light m-1 pt-1 pb-1 text-center">
         <h3 class="titulo">Datos de ambos</h3>
       </div>
@@ -146,6 +281,16 @@
           </div>
           <div class="col-6 lead text-right">
             <strong>{{ resultados.maximo_hora_mensajes }} hs</strong>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 bg-light m-1 pt-1 pb-1">
+        <div class="row">
+          <div class="col-6 lead titulo">
+            <label> Sitio web más compartido</label>
+          </div>
+          <div class="col-6 lead text-right">
+            <strong>{{ resultados.maximo_sitio_compartido }} </strong>
           </div>
         </div>
       </div>
@@ -266,7 +411,7 @@
 
           <div
             class="d-flex flex-column align-items-center bg-dark ml-1 barra"
-            style="position:relative; width:{{ 100/loop.length }}%; height:{{ resultados.sitios_mas_compartidos[sitio]/(resultados.sitios_mas_compartidos[resultados.maximo_sitio_visitado] +1 )*100 }}%"
+            style="position:relative; width:{{ 100/loop.length }}%; height:{{ resultados.sitios_mas_compartidos[sitio]/(resultados.sitios_mas_compartidos[resultados.maximo_sitio_compartido] +1 )*100 }}%"
           >
             <span
               class="text-secondary"
@@ -321,7 +466,7 @@
               >
                 <div class="card-body">
                   <div class="row">
-                    {% set this_user = usuarios[0] %}
+                    {% set this_user = resultados.usuarios[0] %}
                     {% for key, mensaje in resultados.mensajes %}
                         {% if key == this_user %}
                             <div class="col-8 bg-success text-white p-4 mt-2 rounded-right">
