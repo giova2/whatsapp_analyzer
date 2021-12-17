@@ -88,7 +88,7 @@
                 class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
                 aria-labelledby="headingStartConversation{{usuario}}"
                 data-parent="#accordionStartConversation{{ usuario }}"
-            >                
+            >
                 <ul class="list-group">
                     {% for mensaje in resultados[usuario].mensajes_arranque %}
                     <li class="list-group-item pt-1 pb-1 item"><p>{{ mensaje }}</p></li>
@@ -119,7 +119,7 @@
                 data-parent="#accordionMostUsedWords{{ usuario }}"
             >
                 <ul class="list-group">
-                    {% for palabra in resultados[usuario].palabras_mas_usadas %} 
+                    {% for palabra in resultados[usuario].palabras_mas_usadas %}
                       {% if resultados[usuario].palabras_mas_usadas[palabra] >= resultados.minimo_considerable_palabra_usada %}
                         <li
                         class="list-group-item text-secondary pt-1 pb-1 item"
@@ -156,7 +156,7 @@
                     data-parent="#accordionMostUsedEmojis{{ usuario }}"
                 >
               <ul class="list-group">
-                  {% for emoji, number in resultados[usuario].contador_emojis.items() %} 
+                  {% for emoji, number in resultados[usuario].contador_emojis.items() %}
                       <li
                       class="list-group-item text-secondary pt-1 pb-1 item"
                       title="{{emoji}}"
@@ -190,7 +190,7 @@
                   Cantidad mensajes
                 </div>
                 {% for cant_mensajes_hora_tal in resultados[usuario].hora_mensajes %}
-      
+
                 <div
                   class="d-flex flex-column align-items-center bg-dark ml-1 barra"
                   style="position:relative; width:{{ 100/25 }}%; height:{{ cant_mensajes_hora_tal/(resultados.hora_mensajes[resultados.maximo_hora_mensajes] +1 )*100 }}%"
@@ -205,7 +205,7 @@
                     {{ loop.index0 }}
                   </span>
                 </div>
-      
+
                 {% endfor %}
               </div>
               <div class="text-center mt-4 lead titulo">Horas del día</div>
@@ -232,7 +232,7 @@
                   Cantidad mensajes
                 </div>
                 {% for cant_mensajes_dia_tal in resultados[usuario].dia_mensajes %}
-      
+
                 <div
                   class="d-flex flex-column align-items-center bg-dark ml-1 barra"
                   style="position:relative; width:{{ 100/8 }}%; height: {{ cant_mensajes_dia_tal/(resultados.dia_mensajes[resultados.maximo_dia_mensajes] +1 )*100 }}%"
@@ -253,7 +253,7 @@
                     {{ dias_semana_cortos[loop.index0] }}
                   </span>
                 </div>
-      
+
                 {% endfor %}
               </div>
               <div class="text-center mt-4 lead titulo">Días de la semana</div>
@@ -476,7 +476,7 @@
                                 {{ mensaje }}
                             </div>
                     {% endfor %}
-                    
+
                   </div>
                 </div>
               </div>

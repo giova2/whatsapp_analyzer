@@ -6,17 +6,17 @@ cabeceras_index = 'messengers'
 msgs_index = 'msgs'
 
 def get_gross_data(data):
-    #con este patron obtenemos una 3-tupla con los valores fecha,hora,usuario 
+    #con este patron obtenemos una 3-tupla con los valores fecha,hora,usuario
     pattern = re.compile('\n(\d+\/\d+\/\d+)\s(\d+:\d+)\s+-\s+([a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?[a-zA-Z0-9]+)\s?:\s+')
     # utilizamos este patron para separar cada uno de los mensajes
     # pattern_messages = re.compile('\n(\d+\/\d+\/\d+\s\d+:\d+\s+-\s+[a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?[a-zA-Z0-9]+)\s?:\s+')
     pattern_messages = re.compile('\n\d+\/\d+\/\d+\s\d+:\d+\s+-\s+[a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?:\s+')
     cabeceras = re.findall(pattern, data)
     messages_split = pattern_messages.split(data)
-    messages_split.pop(0) # descartamos el primer elemento porque lo que obtenemos es el mensaje de aviso de whatsapp que en realidad no debe contarse como mensaje en si mismo dado que ningún usuario del chat lo esta enviando 
+    messages_split.pop(0) # descartamos el primer elemento porque lo que obtenemos es el mensaje de aviso de whatsapp que en realidad no debe contarse como mensaje en si mismo dado que ningún usuario del chat lo esta enviando
     if(len(messages_split) != len(cabeceras)):
         raise NameError('La cantidad de mensajes y cabeceras son diferentes')
-    # lo que se hace con pattern.split es separar el archivo de texto en un array tomando como 
+    # lo que se hace con pattern.split es separar el archivo de texto en un array tomando como
     # parámetro de separación
     # la captura obtenida con la expresión regular (la captura es lo que está entre paréntesis)
     return {cabeceras_index: cabeceras, msgs_index:messages_split}
@@ -59,7 +59,7 @@ def acumulador_palabras(mensaje, datos_usuarios, user_name): #acumulador_palabra
             palabra = palabra.lower()
             palabra = palabra.strip()
             if palabra != '':
-                datos_usuarios[user_name]['contador_palabras'] += 1 
+                datos_usuarios[user_name]['contador_palabras'] += 1
                 datos_usuarios[user_name]['palabras_mas_usadas'][palabra] = datos_usuarios[user_name]['palabras_mas_usadas'][palabra] + 1 if palabra in datos_usuarios[user_name]['palabras_mas_usadas'] and len(palabra) > 1 else 1
     # return [acumulador_palabras_usadas,acumulador_palabras,acumulador_caracteres]
 

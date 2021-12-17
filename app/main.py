@@ -34,18 +34,17 @@ def get_input_chats():
 @app.route('/chats', methods=['POST'])
 def chats():
     FileChat = request.files['file']
-    
+
     if FileChat and allowed_file(FileChat.filename):
         dir_chats = 'chats/'
-        chatFileName = dir_chats + secure_filename(FileChat.filename) 
+        chatFileName = dir_chats + secure_filename(FileChat.filename)
         FileChat.save(chatFileName)
         dir_path_chats = Path(dir_chats)
         # for FChat in dir_chats.glob('*.'+ExportExtension):
-        file = open(chatFileName, mode='r', encoding="utf8")
-        data = file.read()
-        file.close()
-        resultados = estadisticas(data)
-        return render_template('show_info.html', title="Analizador Whatsapp chats", chat=FileChat, resultados=resultados)
+        with open(chatFileName, mode='r', encoding="utf8") as file:
+          data = file.read()
+          resultados = estadisticas(data)
+          return render_template('show_info.html', title="Analizador Whatsapp chats", chat=FileChat, resultados=resultados)
     return '<div style="display: flex;justify-content: center;align-items: center;height: 100%;"><h2>El archivo debe ser .txt</h2></div>'
 
 @app.route('/chats_consola', methods=['GET'])
@@ -105,7 +104,7 @@ def estadisticas(data):
         emoji_dict[user_name] = extraer_emojis(dfs[user_name]['mensajes'])
         emoji_df = pd.DataFrame(emoji_dict[user_name])
         datos_usuarios[user_name]['contador_emojis'] = emoji_df[0].value_counts()[:5] # imprime los 5 emojis más enviados
-        
+
         multimedia_files = dfs[user_name]['mensajes'].value_counts()['<Multimedia omitido>'] # cuenta la cantidad de archivos multimedia compartidos
         datos_usuarios[user_name]['contador_mensajes_multimedia'] = multimedia_files
 
@@ -119,7 +118,7 @@ def estadisticas(data):
         datos_usuarios[user_name]['palabras_mas_usadas'] = dict(take(6, datos_usuarios[user_name]['palabras_mas_usadas'].items()))
         print('\n\n\n\n\n\n\n\n\n************* acumulador ****************\n\n\n\n\n\n')
         print(datos_usuarios)
-        
+
     # sys.exit()
     datos_usuarios['maximo_dia_mensajes'] = indice_del_maximo(datos_usuarios['dia_mensajes'])
     datos_usuarios['maximo_hora_mensajes'] = indice_del_maximo(datos_usuarios['hora_mensajes'])
@@ -158,6 +157,6 @@ def data_estructure_usuarios(usuarios):
         }
     return arr_datos_usuario
 
-
-if(__name__ == '__main__'):
-    app.run(host="0.0.0.0", port="4000", debug=True)
+if __name__ == "__main__":
+    # Only for debugging while developing
+    app.run(host='0.0.0.0', debug=True, port=80)
