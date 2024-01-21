@@ -1,16 +1,17 @@
 import re
 import emoji
 from datetime import datetime
+import pdb
 
 cabeceras_index = 'messengers'
 msgs_index = 'msgs'
 
 def get_gross_data(data):
-    #con este patron obtenemos una 3-tupla con los valores fecha,hora,usuario 
-    pattern = re.compile('\n(\d+\/\d+\/\d+)\s(\d+:\d+)\s+-\s+([a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?[a-zA-Z0-9]+)\s?:\s+')
+    # con este patron obtenemos una 3-tupla con los valores fecha,hora,usuario 
+    pattern = re.compile(r'\n(\d+\/\d+\/\d+),\s+(\d+:\d+)\s+-\s(.*?):\s(.*)', re.UNICODE)
     # utilizamos este patron para separar cada uno de los mensajes
     # pattern_messages = re.compile('\n(\d+\/\d+\/\d+\s\d+:\d+\s+-\s+[a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?[a-zA-Z0-9]+)\s?:\s+')
-    pattern_messages = re.compile('\n\d+\/\d+\/\d+\s\d+:\d+\s+-\s+[a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?[a-zA-Z0-9]+\s?:\s+')
+    pattern_messages = re.compile(r'\n\d+\/\d+\/\d+,\s+\d+:\d+\s+-\s+.+\s?:\s+', re.UNICODE)
     cabeceras = re.findall(pattern, data)
     messages_split = pattern_messages.split(data)
     messages_split.pop(0) # descartamos el primer elemento porque lo que obtenemos es el mensaje de aviso de whatsapp que en realidad no debe contarse como mensaje en si mismo dado que ningún usuario del chat lo esta enviando 
@@ -19,7 +20,7 @@ def get_gross_data(data):
     # lo que se hace con pattern.split es separar el archivo de texto en un array tomando como 
     # parámetro de separación
     # la captura obtenida con la expresión regular (la captura es lo que está entre paréntesis)
-    return {cabeceras_index: cabeceras, msgs_index:messages_split}
+    return {cabeceras_index: cabeceras, msgs_index: messages_split}
 
 #cuenta los mensajes que envió cada usuario
 def get_users(messengers):
@@ -27,6 +28,7 @@ def get_users(messengers):
     for each in messengers:
         user_name = each[2].strip().lower().replace(' ', '_') # dado que las tuplas son (fecha, hora, usuario)
         if user_name not in users:
+            print('\n user_name: ', user_name)
             users.append(user_name)
     return users
 
@@ -47,7 +49,7 @@ def extraer_emojis(df_column):
     for string in df_column: #my_df[columnname]:
         my_str = str(string)
         for each in my_str:
-            if each in emoji.UNICODE_EMOJI:
+            if each in emoji.EMOJI_DATA:
                 emojis.append(each)
     return emojis
 

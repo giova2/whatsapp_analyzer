@@ -16,146 +16,200 @@
         <strong>{{ resultados.contador_mensajes }} </strong>
       </div>
       {% for usuario in resultados.usuarios %}
-      <div class="col-12 col-md-6">
-        <div class="row">
-          <div class="col-12 lead text-center">
-            <h3 class="titulo">Datos {{ usuario|title|replace("_"," ")|truncate(9,true,'..') }}</h3>
-          </div>
-          <div class="col-12 bg-light m-1 pt-1 pb-1">
-            <div class="row">
-              <div class="col-8 col-md-6 lead titulo">
-                <label> Mensajes enviados</label>
-              </div>
-              <div class="col-4 col-md-6 lead text-right">
-                <strong>{{ resultados[usuario].contador_mensajes }} </strong>
-              </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 lead text-center">
+              <h3 class="titulo">Datos {{ usuario|title|replace("_"," ")|truncate(9,true,'..') }}</h3>
             </div>
-          </div>
-          <div class="col-12 bg-light m-1 pt-1 pb-1">
-            <div class="row">
-              <div class="col-9 col-md-8 lead titulo">
-                <label> Largo promedio de mensajes (en caracteres)</label>
-              </div>
-              <div class="col-3 col-md-4 lead text-right">
-                <strong
-                  >{{ resultados[usuario].promedio_largo_mensajes }}
-                </strong>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 bg-light m-1 pt-1 pb-1">
-            <div class="row">
-              <div class="col-8 col-md-6 lead titulo">
-                <label> Palabras</label>
-              </div>
-              <div class="col-4 col-md-6 lead text-right">
-                <strong>{{ resultados[usuario].contador_palabras }} </strong>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 bg-light m-1 pt-1 pb-1">
-            <div class="row">
-              <div class="col-8 col-md-6 lead titulo">
-                <label> Archivos Multimedia </label>
-              </div>
-              <div class="col-4 col-md-6 lead text-right">
-                <strong>{{ resultados[usuario].contador_mensajes_multimedia }} </strong>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-            <div class="col-12 bg-light m-1 pt-1 pb-1 lead" id="accordionStartConversation{{ usuario }}">
-                <div
-                    class="card-header"
-                    id="headingStartConversation{{usuario}}"
-                    data-toggle="collapse"
-                    data-target="#collapseStartConversation{{usuario}}"
-                    aria-expanded="false"
-                    aria-controls="collapseStartConversation{{usuario}}"
-                >
-                    <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
-                    Arrancó la conversación
-                    <strong
-                        >{{ resultados[usuario].arranco_conversacion }}
-                    </strong>
-                    veces
-                    </h5>
+            <div class="col-12 bg-light m-1 pt-1 pb-1">
+              <div class="row">
+                <div class="col-8 col-md-6 lead titulo">
+                  <label> Mensajes enviados</label>
                 </div>
-            </div>
-            <div
-                id="collapseStartConversation{{usuario}}"
-                class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
-                aria-labelledby="headingStartConversation{{usuario}}"
-                data-parent="#accordionStartConversation{{ usuario }}"
-            >                
-                <ul class="list-group">
-                    {% for mensaje in resultados[usuario].mensajes_arranque %}
-                    <li class="list-group-item pt-1 pb-1 item"><p>{{ mensaje }}</p></li>
-                    {% endfor %}
-                </ul>
-                <div class="close bg-light" onclick="$('#collapseStartConversation{{usuario}}').collapse('hide')"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 bg-light m-1 pt-1 pb-1 lead" id="accordionMostUsedWords{{ usuario }}">
-                <div
-                    class="card-header"
-                    id="headingMostUsedWords{{usuario}}"
-                    data-toggle="collapse"
-                    data-target="#collapseMostUsedWords{{usuario}}"
-                    aria-expanded="false"
-                    aria-controls="collapseMostUsedWords{{usuario}}"
-                >
-                    <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
-                    Palabras más usadas:
-                    </h5>
+                <div class="col-4 col-md-6 lead text-right">
+                  <strong>{{ resultados[usuario].contador_mensajes }} </strong>
                 </div>
+              </div>
             </div>
-            <div
-                id="collapseMostUsedWords{{usuario}}"
-                class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
-                aria-labelledby="headingMostUsedWords{{usuario}}"
-                data-parent="#accordionMostUsedWords{{ usuario }}"
-            >
-                <ul class="list-group">
-                    {% for palabra in resultados[usuario].palabras_mas_usadas %} 
-                      {% if resultados[usuario].palabras_mas_usadas[palabra] >= resultados.minimo_considerable_palabra_usada %}
-                        <li
-                        class="list-group-item text-secondary pt-1 pb-1 item"
-                        title="{{palabra}}"
-                        ><p>
-                        {{ palabra }} : {{ resultados[usuario].palabras_mas_usadas[palabra] }}
-                        </p>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
-                </ul>
-                <div class="close bg-light" onclick="$('#collapseMostUsedWords{{usuario}}').collapse('hide')"></div>
+            <div class="col-12 bg-light m-1 pt-1 pb-1">
+              <div class="row">
+                <div class="col-9 col-md-8 lead titulo">
+                  <label> Largo promedio de mensajes (en caracteres)</label>
+                </div>
+                <div class="col-3 col-md-4 lead text-right">
+                  <strong
+                    >{{ resultados[usuario].promedio_largo_mensajes }}
+                  </strong>
+                </div>
+              </div>
             </div>
-        </div>
-        <div class="row">
-          <div class="col-12 bg-light m-1 pt-1 pb-1 lead" id="accordionMostUsedEmojis{{ usuario }}">
+            <div class="col-12 bg-light m-1 pt-1 pb-1">
+              <div class="row">
+                <div class="col-8 col-md-6 lead titulo">
+                  <label> Palabras</label>
+                </div>
+                <div class="col-4 col-md-6 lead text-right">
+                  <strong>{{ resultados[usuario].contador_palabras }} </strong>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 bg-light m-1 pt-1 pb-1">
+              <div class="row">
+                <div class="col-8 col-md-6 lead titulo">
+                  <label> Archivos Multimedia </label>
+                </div>
+                <div class="col-4 col-md-6 lead text-right">
+                  <strong>{{ resultados[usuario].contador_mensajes_multimedia }} </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+              <div 
+                class="col-12 bg-light m-1 pt-1 pb-1 lead" 
+                data-bs-popper="static"
+                id="accordionStartConversation{{ usuario }}">
+                  <div
+                      class="card-header accordion"
+                      id="headingStartConversation{{usuario}}"
+                      data-toggle="collapse"
+                      data-target="#collapseStartConversation{{usuario}}"
+                      aria-expanded="false"
+                      aria-controls="collapseStartConversation{{usuario}}"
+                  >
+                      <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
+                        Arrancó la conversación
+                        <strong
+                            >{{ resultados[usuario].arranco_conversacion }}
+                        </strong>
+                        veces
+                      </h5>
+                      <svg xmlns="http://www.w3.org/2000/svg" 
+                        width="25" height="25" 
+                        fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16"
+                        id="accordionArrowDownStartConversation{{ usuario }}"
+                      >
+                        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67"/>
+                      </svg>
+                  </div>
+              </div>
               <div
-                  class="card-header"
-                  id="headingMostUsedEmojis{{usuario}}"
-                  data-toggle="collapse"
-                  data-target="#collapseMostUsedEmojis{{usuario}}"
-                  aria-expanded="false"
-                  aria-controls="collapseMostUsedEmojis{{usuario}}"
-              >
-                  <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
-                  Emojis más usados:
-                  </h5>
+                  id="collapseStartConversation{{usuario}}"
+                  class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
+                  aria-labelledby="headingStartConversation{{usuario}}"
+                  data-parent="#accordionStartConversation{{ usuario }}"
+              >                
+                  <ul class="list-group items">
+                      {% for mensaje in resultados[usuario].mensajes_arranque %}
+                      <li class="list-group-item pt-1 pb-1 item"><p>{{ mensaje }}</p></li>
+                      {% endfor %}
+                  </ul>
+                  <div class="close bg-light" onclick="$('#collapseStartConversation{{usuario}}').collapse('hide')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-bar-up" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M3.646 11.854a.5.5 0 0 0 .708 0L8 8.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M2.4 5.2c0 .22.18.4.4.4h10.4a.4.4 0 0 0 0-.8H2.8a.4.4 0 0 0-.4.4"/>
+                    </svg>
+                  </div>
               </div>
+              <script>
+                $(document).ready(function () {
+                  // Agregar un listener para el evento "show" del colapso
+                  $('#collapseStartConversation{{usuario}}').on('show.bs.collapse', function () {
+                    $('#accordionArrowDownStartConversation{{ usuario }}').addClass('d-none')
+                  });
+                  $('#collapseStartConversation{{usuario}}').on('hide.bs.collapse', function () {
+                    $('#accordionArrowDownStartConversation{{ usuario }}').removeClass('d-none')
+                  });
+                });
+              </script>
           </div>
-            <div
-                    id="collapseMostUsedEmojis{{usuario}}"
-                    class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
-                    aria-labelledby="headingMostUsedEmojis{{usuario}}"
-                    data-parent="#accordionMostUsedEmojis{{ usuario }}"
+          <div class="row">
+              <div class="col-12 bg-light m-1 pt-1 pb-1 lead" id="accordionMostUsedWords{{ usuario }}">
+                  <div
+                      class="card-header accordion"
+                      id="headingMostUsedWords{{usuario}}"
+                      data-toggle="collapse"
+                      data-target="#collapseMostUsedWords{{usuario}}"
+                      aria-expanded="false"
+                      aria-controls="collapseMostUsedWords{{usuario}}"
+                  >
+                      <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
+                        Palabras más usadas:
+                      </h5>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+                        fill="currentColor" 
+                        class="bi bi-chevron-compact-down" viewBox="0 0 16 16"
+                        id="accordionArrowDownMostUsedWords{{ usuario }}">
+                        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67"/>
+                      </svg>
+                  </div>
+              </div>
+              <div
+                  id="collapseMostUsedWords{{usuario}}"
+                  class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
+                  aria-labelledby="headingMostUsedWords{{usuario}}"
+                  data-parent="#accordionMostUsedWords{{ usuario }}"
+              >
+                  <ul class="list-group items">
+                      {% for palabra in resultados[usuario].palabras_mas_usadas %} 
+                        {% if resultados[usuario].palabras_mas_usadas[palabra] >= resultados.minimo_considerable_palabra_usada %}
+                          <li
+                          class="list-group-item text-secondary pt-1 pb-1 item"
+                          title="{{palabra}}"
+                          ><p>
+                          {{ palabra }} : {{ resultados[usuario].palabras_mas_usadas[palabra] }}
+                          </p>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                  </ul>
+                  <div class="close bg-light" onclick="$('#collapseMostUsedWords{{usuario}}').collapse('hide')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-bar-up" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M3.646 11.854a.5.5 0 0 0 .708 0L8 8.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M2.4 5.2c0 .22.18.4.4.4h10.4a.4.4 0 0 0 0-.8H2.8a.4.4 0 0 0-.4.4"/>
+                    </svg>
+                  </div>
+              </div>
+              <script>
+                $(document).ready(function () {
+                  // Agregar un listener para el evento "show" del colapso
+                  $('#collapseMostUsedWords{{usuario}}').on('show.bs.collapse', function () {
+                    $('#accordionArrowDownMostUsedWords{{ usuario }}').addClass('d-none')
+                  });
+                  $('#collapseMostUsedWords{{usuario}}').on('hide.bs.collapse', function () {
+                    $('#accordionArrowDownMostUsedWords{{ usuario }}').removeClass('d-none')
+                  });
+                });
+              </script>
+          </div>
+          <div class="row">
+            <div class="col-12 bg-light m-1 pt-1 pb-1 lead" id="accordionMostUsedEmojis{{ usuario }}">
+                <div
+                    class="card-header accordion"
+                    id="headingMostUsedEmojis{{usuario}}"
+                    data-toggle="collapse"
+                    data-target="#collapseMostUsedEmojis{{usuario}}"
+                    aria-expanded="false"
+                    aria-controls="collapseMostUsedEmojis{{usuario}}"
                 >
-              <ul class="list-group">
+                    <h5 class="mb-0 lead titulo text-center m-1 pt-1 pb-1">
+                      Emojis más usados:
+                    </h5>
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                      width="25" height="25" 
+                      fill="currentColor" 
+                      class="bi bi-chevron-compact-down" viewBox="0 0 16 16"
+                      id="accordionArrowDownMostUsedEmojis{{usuario}}">
+                      <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67"/>
+                    </svg>
+                </div>
+            </div>
+            <div
+                id="collapseMostUsedEmojis{{usuario}}"
+                class="col-12 bg-light m-1 pt-1 pb-1 lead collapse"
+                aria-labelledby="headingMostUsedEmojis{{usuario}}"
+                data-parent="#accordionMostUsedEmojis{{ usuario }}"
+              >
+              <ul class="list-group items">
                   {% for emoji, number in resultados[usuario].contador_emojis.items() %} 
                       <li
                       class="list-group-item text-secondary pt-1 pb-1 item"
@@ -166,8 +220,23 @@
                       </li>
                   {% endfor %}
               </ul>
-              <div class="close bg-light" onclick="$('#collapseMostUsedEmojis{{usuario}}').collapse('hide')"></div>
+              <div class="close bg-light" onclick="$('#collapseMostUsedEmojis{{usuario}}').collapse('hide')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-bar-up" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M3.646 11.854a.5.5 0 0 0 .708 0L8 8.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M2.4 5.2c0 .22.18.4.4.4h10.4a.4.4 0 0 0 0-.8H2.8a.4.4 0 0 0-.4.4"/>
+                </svg>
+              </div>
             </div>
+            <script>
+              $(document).ready(function () {
+                // Agregar un listener para el evento "show" del colapso
+                $('#collapseMostUsedEmojis{{usuario}}').on('show.bs.collapse', function () {
+                  $('#accordionArrowDownMostUsedEmojis{{ usuario }}').addClass('d-none')
+                });
+                $('#collapseMostUsedEmojis{{usuario}}').on('hide.bs.collapse', function () {
+                  $('#accordionArrowDownMostUsedEmojis{{ usuario }}').removeClass('d-none')
+                });
+              });
+            </script>
           </div>
           <div class="row">
             <div class="col-12 bg-light mt-1 ml-1 mr-1 pt-1 text-center lead titulo">
@@ -259,7 +328,7 @@
               <div class="text-center mt-4 lead titulo">Días de la semana</div>
             </div>
           </div>
-      </div>
+        </div>
       {% endfor %}
       <div class="col-12 bg-light m-1 pt-1 pb-1 text-center">
         <h3 class="titulo">Datos de ambos</h3>
@@ -460,7 +529,7 @@
               </div>
               <div
                 id="collapseChat"
-                class="collapse show"
+                class="collapse show chat"
                 aria-labelledby="headingChat"
                 data-parent="#accordionChat"
               >
@@ -486,5 +555,6 @@
       </div>
     </div>
   </div>
+  
 </body>
 {% endblock %}

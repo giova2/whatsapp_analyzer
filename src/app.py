@@ -6,6 +6,8 @@ from pathlib import Path
 from werkzeug.utils import secure_filename
 import sys
 from datetime import datetime
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 from .functions import *
 
@@ -66,18 +68,18 @@ def estadisticas(data):
     datos_usuarios['contador_mensajes'] = len(dicc_messengers_msgs[msgs_index])
     datos_usuarios['usuarios'] = users_list
     fecha_ultimo_mensaje = datetime(1970, 1, 1)
-    print(dicc_messengers_msgs[cabeceras_index])
+    print(f'users_list: {users_list}')
     index = 0
     for each in dicc_messengers_msgs[cabeceras_index]:
         esta_fecha = convertir_a_fecha(each[0], each[1])
         diferencia = esta_fecha - fecha_ultimo_mensaje
         user_name = each[2].strip().lower().replace(' ', '_')
         # diferencia.total_seconds() //3600 traduce la cantidad de segundos en horas
-        if diferencia.total_seconds() // 3600 >= 15 or fecha_ultimo_mensaje == datetime(1970, 1, 1):
+        if (diferencia.total_seconds() // 3600) >= 15 or fecha_ultimo_mensaje == datetime(1970, 1, 1):
             datos_usuarios[user_name]['arranco_conversacion'] += 1
             datos_usuarios[user_name]['mensajes_arranque'].append(each[0]+' '+each[1] +' - '+ dicc_messengers_msgs[msgs_index][index])
         fecha_ultimo_mensaje = esta_fecha
-        date_msg,hour_msg,user_msg = dicc_messengers_msgs[cabeceras_index][index]
+        date_msg, hour_msg, user_msg, _msg = dicc_messengers_msgs[cabeceras_index][index]
         datos_usuarios['mensajes'].append((user_msg.strip().lower().replace(' ', '_'), date_msg+' '+hour_msg+' - '+dicc_messengers_msgs[msgs_index][index]))
         index += 1
     # users_list = map(lambda x: x.strip().lower().replace(' ', '_'), users_list)
@@ -95,6 +97,7 @@ def estadisticas(data):
         who_sent_what[user_name]['mensajes'].append(dicc_messengers_msgs[msgs_index][index_msg]) #obtaining the message mentioned after sender
     # Now in the following code we will be creating a Dataframe with messengers as the column names and messages as the values.
     dfs = {}
+    # print(f"who_sent_what={who_sent_what}")
     for user_name in users_list:
         dfs[user_name] = pd.DataFrame([who_sent_what[user_name]['fecha'],who_sent_what[user_name]['hora'],who_sent_what[user_name]['usuario'],who_sent_what[user_name]['mensajes']]) # creamos un DataFrame a partir del array de arrays que acabamos de armar
         dfs[user_name] = dfs[user_name].transpose()   # trasponemos la matriz para dejar los arrays como columnas
@@ -104,9 +107,13 @@ def estadisticas(data):
         datos_usuarios[user_name]['contador_mensajes'] = len(dfs[user_name]['mensajes'])
         emoji_dict[user_name] = extraer_emojis(dfs[user_name]['mensajes'])
         emoji_df = pd.DataFrame(emoji_dict[user_name])
-        datos_usuarios[user_name]['contador_emojis'] = emoji_df[0].value_counts()[:5] # imprime los 5 emojis más enviados
+        # print(f'\n\n\n\n\n\n\n\n\n emoji_df={emoji_df} \n\n\n\n\n\n\n\n\n')
+        datos_usuarios[user_name]['contador_emojis'] = emoji_df[0].value_counts()[:5] if not emoji_df.empty else pd.Series(data={}) # imprime los 5 emojis más enviados 
         
-        multimedia_files = dfs[user_name]['mensajes'].value_counts()['<Multimedia omitido>'] # cuenta la cantidad de archivos multimedia compartidos
+        mensajes_del_usuario = dfs[user_name]['mensajes'].value_counts()
+        # print(f'\n\n\n\n\n\n\n\n\n mensajes_del_usuario={mensajes_del_usuario} \n\n\n\n\n\n\n\n\n')
+        multimedia_key = '<Multimedia omitido>'
+        multimedia_files = mensajes_del_usuario[multimedia_key] if multimedia_key in mensajes_del_usuario else pd.Series(data={}) # cuenta la cantidad de archivos multimedia compartidos
         datos_usuarios[user_name]['contador_mensajes_multimedia'] = multimedia_files
 
         dfs[user_name]['mensajes'].apply(acumulador_palabras, args=(datos_usuarios, user_name))
@@ -118,7 +125,7 @@ def estadisticas(data):
             datos_usuarios[user_name]['promedio_largo_mensajes'] = round(datos_usuarios[user_name]['contador_caracteres'] / datos_usuarios[user_name]['contador_mensajes'])
         datos_usuarios[user_name]['palabras_mas_usadas'] = dict(take(6, datos_usuarios[user_name]['palabras_mas_usadas'].items()))
         print('\n\n\n\n\n\n\n\n\n************* acumulador ****************\n\n\n\n\n\n')
-        print(datos_usuarios)
+        # print(datos_usuarios)
         
     # sys.exit()
     datos_usuarios['maximo_dia_mensajes'] = indice_del_maximo(datos_usuarios['dia_mensajes'])
@@ -158,6 +165,19 @@ def data_estructure_usuarios(usuarios):
         }
     return arr_datos_usuario
 
+if __name__ == '__main__':
+    observer = Observer()
 
-if(__name__ == '__main__'):
-    app.run(host="0.0.0.0", port="4000", debug=True)
+    class MyHandler(FileSystemEventHandler):
+        def on_any_event(self, event):
+            if event.is_directory or not event.src_path.endswith(".py"):
+                return
+            print("Recargando debido a cambios en el código...")
+            observer.stop()
+
+    observer.schedule(MyHandler(), path=".", recursive=True)
+    observer.start()
+
+    app.run(debug=True, use_reloader=False)
+    observer.join()
+    # app.run(host="0.0.0.0", port="4000", debug=True)
